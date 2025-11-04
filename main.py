@@ -1,63 +1,53 @@
 import streamlit as st
-from langchain_groq import ChatGroq
+import bot as b 
 
 st.set_page_config(page_title="Chatbot Powered by Groq", page_icon=":robot:", layout="wide")
 
-# 2. Session State Initialization
+# 1. Session State Initialization
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-
 def start_bot():
-    # This function is used to set the title in the main panel when the button is clicked.
-    st.title("Welcome to the Chatbot powered by Groq :smiley: \n\t\thow can I help you today?")
-    # Note: st.chat_input should be placed in the main execution flow to actively listen for input.
+    st.title("Welcome to the Chatbot powered by Groq :smiley: \nhow can I help you today?")
     
-
 def handle_user_input(prompt):
-    """Adds the user's message to the chat history and simulates a bot response."""
-    # 1. Add user message to history
+    """Adds user message, calls the backend, and updates chat history."""
+    
     st.session_state.messages.append({"role": "user", "content": prompt})
     
-    # 2. Add a simple bot response (you will replace this with your Groq API call)
-    st.session_state.messages.append({"role": "assistant", "content": f"I received your message: '{prompt}' (Groq API logic goes here!)"})
+    with st.spinner("Thinking..."):
+        try:
+            # CORRECT CALL: Using b.send_prompt (no 't')
+            bot_response = b.send_prompt(prompt)
+        except Exception as e:
+            # Displays the error message, which will now be more informative
+            bot_response = f"An error occurred: module 'bot' has no attribute 'sent_prompt' was resolved. However, a new error occurred: {e}"
 
-# --- Sidebar Configuration ---
+    st.session_state.messages.append({"role": "assistant", "content": bot_response})
 
+# 2. Sidebar Configuration
 with st.sidebar:
     st.header("Settings :rocket:")
     
-    # Using snake_case for consistency
-    api_key = st.text_input("Enter the Groq API key", type="password")
-    
-    model = st.selectbox(
+    st.selectbox(
         "Select the model to use", 
-        options=["deepseek-r1-distill-llama-70b", "llama-3.1-8b-instant", "qwen/qwen3-32b", "gemma2-9b-it"], 
+        options=["llama-3.1-8b-instant", "deepseek-r1-distill-llama-70b", "qwen/qwen3-32b", "gemma2-9b-it"], 
         index=None,
         placeholder="Select a model"
     )
     
-    # Buttons for control
     st.button("Clear Chat", on_click=st.session_state.messages.clear)
     st.button("Start Chat", on_click=start_bot)
 
-# --- Main Application Pane (Right Side) ---
 
-
-# 1. Display Chat History
-# This loop iterates through the session state and displays all past messages.
+# Display all previous messages
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# 2. Add the Input Box and Process New Messages
-# st.chat_input should be placed at the bottom of the main section to capture input.
-# The key for making the input and chat window appear in the main pane is keeping this code OUTSIDE the 'with st.sidebar:' block.
+# Handle new user input
 prompt = st.chat_input("Ask me Anything...")
 
 if prompt:
-    # Handle the user's input when they press Enter or click the send button
     handle_user_input(prompt)
-    
-    # Rerun the app to display the new messages
     st.rerun()

@@ -1,55 +1,49 @@
 import os
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import SystemMessage
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
 
-# 1. Load environment variables from .env file
+# 1. Configuration
 load_dotenv()
-
-# --- Auto-Configure Environment ---
-# The LANGCHAIN_TRACING_V2, LANGCHAIN_API_KEY, and LANGCHAIN_PROJECT 
-# variables are automatically loaded by LangChain/LangSmith when they are set 
-# in the environment (which load_dotenv() does).
-
-# --- Get the Groq API Key ---
-# Retrieve the Groq API Key from the environment
 groq_api_key = os.getenv("GROQ_API_KEY")
 
 if not groq_api_key:
     raise ValueError("GROQ_API_KEY not found in environment variables.")
 
-# 2. Initialize the ChatGroq model (LangChain integration)
-# LangChain's ChatGroq automatically picks up the key from the environment
-# if you omit the 'groq_api_key' argument, but explicitly passing it is also fine.
+# 2. Define Core Components
 model = ChatGroq(
     temperature=0.7,
-    model_name="llama-3.1-8b-instant",  # Replace with your desired Groq model
-    groq_api_key=groq_api_key      # Use the key loaded from .env
+    model_name="llama-3.1-8b-instant",
+    groq_api_key=groq_api_key
 )
 
-# 3. Example of calling the model with LangSmith tracing enabled
-def get_groq_response(user_prompt: str):
-    """
-    Sends a prompt to Groq and returns the response.
-    This call will be automatically traced and logged to LangSmith.
-    """
-    messages = [
-        SystemMessage(content="You are a helpful assistant for coding and GitHub workflows."),
-        HumanMessage(content=user_prompt),
-    ]
+parser = StrOutputParser()
 
-    # The model call is the part that LangSmith traces.
-    response = model.invoke(messages)
-    return response.content
+# 3. Chain Definition
+def get_chatbot_chain(model_instance, parser_instance):
+    """Creates and returns the LangChain chain."""
+    prompt = ChatPromptTemplate.from_messages([
+        SystemMessage(content="Act as a senior AI Engineer at google and reply to the user query in a clean and concise manner."),
+        ("human", "{user_prompt}"),
+    ])
+    chain = prompt | model_instance | parser_instance
+    return chain
 
-# --- Test the function ---
+# 4. Initialize the Chain
+BOT_CHAIN = get_chatbot_chain(model, parser)
+
+# 5. Core Function
+def send_prompt(msg):
+    """
+    Invokes the chain with the user's message. 
+    NOTE: The function name is 'send_prompt'.
+    """
+    response = BOT_CHAIN.invoke({"user_prompt": msg})
+    return response
+
 if __name__ == "__main__":
-    test_prompt = "Explain the difference between git fork and git branch in one paragraph."
-    print(f"User Prompt: {test_prompt}\n")
-    
-    response_text = get_groq_response(test_prompt)
-    
-    print("--- Groq Response ---")
-    print(response_text)
-    
-    print("\nThe response is saved already")
+    test_prompt = "Crack a joke"
+    response = send_prompt(test_prompt)
+    print(f"--- Groq Response ---\n{response}")
