@@ -4,7 +4,7 @@ import time
 
 st.set_page_config(page_title="Chatbot Powered by Groq", page_icon=":robot:", layout="wide")
 
-# === 1. Core Functions ===
+# === Core Functions ===
 
 def create_new_chat():
     """
@@ -44,7 +44,7 @@ def handle_user_input(prompt):
 
     active_chat_messages.append({"role": "assistant", "content": bot_response})
 
-# === 2. Session State Initialization ===
+# === Session State Initialization ===
 
 if "chat_sessions" not in st.session_state:
     st.session_state.chat_sessions = {}
@@ -59,7 +59,7 @@ except KeyError:
     active_chat_messages = st.session_state.chat_sessions[st.session_state.active_chat_id]["messages"]
 
 
-# === 3. Sidebar UI ===
+# === Sidebar UI ===
 
 with st.sidebar:
     st.header("Chatbot Controls")
@@ -97,7 +97,7 @@ with st.sidebar:
     st.button("Delete All Chats", on_click=delete_all_chats, use_container_width=True)
 
 
-# === 4. Main Chat Interface ===
+# === Main Chat Interface ===
 
 st.title(f"Chatbot powered by Groq :robot:")
 st.caption(f"Active Chat: **{st.session_state.chat_sessions[st.session_state.active_chat_id]['name']}**")
