@@ -1,49 +1,55 @@
 import os
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
-from langchain_core.messages import SystemMessage
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.output_parsers import StrOutputParser
 
-# 1. Configuration
 load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY")
 
 if not groq_api_key:
     raise ValueError("GROQ_API_KEY not found in environment variables.")
 
-# 2. Define Core Components
-model = ChatGroq(
-    temperature=0.7,
-    model_name="llama-3.1-8b-instant",
-    groq_api_key=groq_api_key
-)
-
-parser = StrOutputParser()
-
-# 3. Chain Definition
-def get_chatbot_chain(model_instance, parser_instance):
-    """Creates and returns the LangChain chain."""
+def send_prompt(message_history, model_name):
+    """
+    Invokes the chain with the message history and the specified model.
+    """
+    
+    # Instantiate the selected model
+    model = ChatGroq(
+        temperature=0.7,
+        model_name=model_name,
+        groq_api_key=groq_api_key
+    )
+    
+    # Define the prompt template
     prompt = ChatPromptTemplate.from_messages([
-        SystemMessage(content="Act as a senior AI Engineer at google and reply to the user query in a clean and concise manner."),
-        ("human", "{user_prompt}"),
+        ("system", "Act as a senior AI Engineer at google and reply to the user query in a clean and concise manner."),
+        MessagesPlaceholder(variable_name="chat_history"),
     ])
-    chain = prompt | model_instance | parser_instance
-    return chain
-
-# 4. Initialize the Chain
-BOT_CHAIN = get_chatbot_chain(model, parser)
-
-# 5. Core Function
-def send_prompt(msg):
-    """
-    Invokes the chain with the user's message. 
-    NOTE: The function name is 'send_prompt'.
-    """
-    response = BOT_CHAIN.invoke({"user_prompt": msg})
+    
+    #  Define the parser and chain
+    parser = StrOutputParser()
+    chain = prompt | model | parser
+    
+    #  Convert history to LangChain message objects
+    lc_messages = []
+    for msg in message_history:
+        if msg['role'] == 'user':
+            lc_messages.append(HumanMessage(content=msg['content']))
+        elif msg['role'] == 'assistant':
+            lc_messages.append(AIMessage(content=msg['content']))
+    
+    #  Invoke the chain
+    response = chain.invoke({"chat_history": lc_messages})
     return response
 
 if __name__ == "__main__":
-    test_prompt = "Crack a joke"
-    response = send_prompt(test_prompt)
-    print(f"--- Groq Response ---\n{response}")
+    # Test the updated function
+    print("--- Testing Stateful Chat ---")
+    history = [{"role": "user", "content": "What is the capital of France?"}]
+    model_to_test = "llama-3.1-8b-instant"
+    
+    response = send_prompt(history, model_to_test)
+    print(f"User: What is the capital of France?\nBot: {response}")
