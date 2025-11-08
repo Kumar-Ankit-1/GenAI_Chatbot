@@ -1,8 +1,4 @@
-Markdown
-
 # Chatbot powered by Groq
-
-![Chatbot UI Screenshot](image_367167.png)
 A simple, multi-session chatbot interface built with **Streamlit** and powered by the blazing-fast **Groq API** using **LangChain**.
 
 ## ✨ Features
