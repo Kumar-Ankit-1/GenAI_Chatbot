@@ -25,7 +25,7 @@ def send_prompt(message_history, model_name):
     
     # Define the prompt template
     prompt = ChatPromptTemplate.from_messages([
-        ("system", "Act as a senior AI Engineer at google and reply to the user query in a clean and concise manner."),
+        ("system", "You are a helpful assistant that replies to the user query in a clean and concise manner."),
         MessagesPlaceholder(variable_name="chat_history"),
     ])
     
