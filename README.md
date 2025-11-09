@@ -1,10 +1,11 @@
-# 🤖 Chatbot powered by Groq
+# 🤖 Chatbot Powered by Groq
 
 ![Python Version](https://img.shields.io/badge/Python-3.9%2B-blue)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.30%2B-red)
-![langchain](https://img.shields.io/badge/LangChain-blueviolet)
+![LangChain](https://img.shields.io/badge/LangChain-blueviolet)
 
-![Chatbot UI Screenshot](<img width="1914" height="913" alt="image" src="https://github.com/user-attachments/assets/ec4c249e-61f0-4760-854f-f17074c387c4" />)
+![Chatbot UI Screenshot](https://github.com/user-attachments/assets/ec4c249e-61f0-4760-854f-f17074c387c4)
+
 A dynamic, multi-session chatbot interface built with Streamlit and powered by the blazing-fast Groq API using LangChain.
 
 ✨ Features
