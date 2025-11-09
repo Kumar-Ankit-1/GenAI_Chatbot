@@ -5,75 +5,91 @@
 ![langchain](https://img.shields.io/badge/LangChain-blueviolet)
 
 ![Chatbot UI Screenshot](<img width="1914" height="913" alt="image" src="https://github.com/user-attachments/assets/ec4c249e-61f0-4760-854f-f17074c387c4" />)
-A dynamic, multi-session chatbot interface built with **Streamlit** and powered by the blazing-fast **Groq API** using **LangChain**.
+A dynamic, multi-session chatbot interface built with Streamlit and powered by the blazing-fast Groq API using LangChain.
 
----
+✨ Features
 
-## ✨ Features
+Multi-Chat Management: Create, switch between, and manage multiple, independent chat sessions.
 
-* **Multi-Chat Management:** Create, switch between, and manage multiple, independent chat sessions.
-* **Chat History:** All conversations are saved within your browser session.
-* **Dynamic Model Selection:** Choose from a list of available Groq models (e.g., Llama 3.1, Qwen).
-* **Custom System Prompt:** Set a custom system prompt from the "Settings" menu to define the bot's personality and role.
-* **Individual Chat Deletion:** Easily delete specific chat sessions with a dedicated "🗑️" button.
-* **Delete All:** Quickly clear all chat history with a single button.
-* **Markdown Support:** Renders the chatbot's responses in formatted Markdown.
+Chat History: All conversations are saved within your browser session.
 
----
+Dynamic Model Selection: Choose from a list of available Groq models (e.g., Llama 3.1, Qwen).
 
-## 🚀 Setup & Installation
+Custom System Prompt: Set a custom system prompt from the “Settings” menu to define the bot’s personality and role.
 
-Follow these steps to get the chatbot running locally.
+Individual Chat Deletion: Easily delete specific chat sessions with a dedicated “🗑️” button.
 
-**1. Clone the Repository**
-```bash
-git clone [https://github.com/Kumar-Ankit-1/groq-chatbot.git](https://github.com/Kumar-Ankit-1/groq-chatbot.git)
+Delete All: Quickly clear all chat history with a single button.
+
+Markdown Support: Renders the chatbot’s responses in formatted Markdown.
+
+🚀 Setup & Installation
+
+Follow these steps to run the chatbot locally.
+
+1. Clone the Repository
+git clone https://github.com/Kumar-Ankit-1/groq-chatbot.git
 cd groq-chatbot
 
 2. Create a Virtual Environment
 
-It's highly recommended to use a virtual environment to manage dependencies.
+It’s highly recommended to use a virtual environment to manage dependencies.
 
-Bash
+For macOS/Linux:
 
-# For macOS/Linux
 python3 -m venv venv
 source venv/bin/activate
 
-# For Windows
+
+For Windows:
+
 python -m venv venv
 .\venv\Scripts\activate
+
 3. Install Dependencies
 
 Install all the required Python packages from the requirements.txt file.
 
-Bash
-
 pip install -r requirements.txt
+
 4. Set Up Your API Key
 
 This project requires a Groq API key to function.
 
-a. Get your free API key from the Groq Console. b. Create a file named .env in the root of the project directory. c. Add your API key to this .env file:
+Get your free API key from the Groq Console
+.
 
-Ini, TOML
+Create a file named .env in the root of the project directory.
+
+Add your API key to the .env file:
 
 GROQ_API_KEY="your_api_key_here"
-The .gitignore file is already set up to ignore .env, so your API key will remain private and won't be committed to Git.
+
+
+The .gitignore file is already configured to exclude .env, ensuring your API key remains private.
 
 🏃‍♂️ How to Run
-Once you have installed the dependencies and set your API key, run the app using Streamlit:
 
-Bash
+Once you’ve installed the dependencies and set your API key, launch the app using Streamlit:
 
 streamlit run main.py
-The app will open automatically in your web browser.
+
+
+The app will automatically open in your web browser.
 
 📁 Project Structure
-main.py: Contains all the Streamlit frontend code for the UI, sidebar, and session state management.
+groq-chatbot/
+│
+├── main.py             # Streamlit frontend and session management
+├── bot.py              # Backend logic and Groq API integration (via LangChain)
+├── requirements.txt    # List of Python dependencies
+├── .gitignore          # Files and folders ignored by Git
+└── .env                # Your Groq API key (not tracked by Git)
 
-bot.py: Handles the backend logic for connecting to the Groq API using langchain_groq.
+💡 Notes
 
-requirements.txt: A list of all Python libraries needed for the project.
+Ensure your Groq API key is valid before running the app.
 
-.gitignore: Specifies files and folders to be ignored by Git (like venv/, .env, and __pycache__/).
+The chatbot’s state and chat history are stored locally in your browser session.
+
+You can easily extend or modify bot.py to integrate additional models or custom logic.
