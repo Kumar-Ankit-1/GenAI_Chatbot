@@ -87,8 +87,9 @@ The app will automatically open in your web browser.
 ## 📁 Project Structure
 
     groq-chatbot/
-    ├── main.py             # Streamlit frontend and session management
-    ├── bot.py              # Backend logic and Groq API integration (via LangChain)
+    └── App
+        ├── main.py             # Streamlit frontend and session management
+        ├── bot.py              # Backend logic and Groq API integration (via LangChain)
     ├── requirements.txt    # List of Python dependencies
     ├── .gitignore          # Files and folders ignored by Git
     └── .env                # Your Groq API key (not tracked by Git)
